@@ -5,16 +5,27 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Главная | Блог</title>
-
+	<?php
+	if (is_singular('post')) {
+		echo '<link rel="stylesheet" href="' . get_template_directory_uri() . '/assets/css/post.css">';
+	}
+	?>
 	<?php wp_head(); ?>
 </head>
 
 <body>
 	<header class="header">
 		<div class="container header__container">
-			<a class="logo header__logo">
-				<img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.svg" alt="Логотип Блога">
-			</a>
+			<?php if (is_front_page()) { ?>
+				<a class="logo header__logo">
+					<img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.svg" alt="Логотип Блога">
+				</a>
+			<?php } else { ?>
+				<a href="<?php echo home_url(); ?>" class="logo header__logo">
+					<img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.svg" alt="Логотип Блога">
+				</a>
+			<?php } ?>
+
 			<div class="header__right">
 				<nav class="nav header__nav">
 					<ul class="nav__list list-reset">

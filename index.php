@@ -7,24 +7,44 @@
 		<h2 class="visually-hidden">Статьи нашего блога</h2>
 		<div class="container content__container">
 			<div class="posts">
-				<article class="blog-post blog-post--main">
-					<a href="#cat" class="blog-post__category">Категория 1</a>
-					<h3 class="blog-post__title blog-title">
-						<a href="#link" class="blog-post__link">
-							Управление ИТ-активами – скучная рутина или творческая задача?
-						</a>
-					</h3>
-					<p class="blog-post__descr">
-						Размышляя об управлении ИТ-активами, я вспомнил один учебный пример. Менеджер по ИТ-мощностям в
-						крупной компании
-						периодически готовил толстенный отчёт руководству. В очередной раз он не принёс отчёт, решив
-						проверить, нужен ли
-						он вообще.
-					</p>
-					<time class="blog-post__date">13 дек 2020</time>
-				</article>
-				<ul class="post-grid list-reset">
 
+
+				<?php
+				$result = wp_get_recent_posts([
+					'numberposts' => 1,
+					'offset' => 0,
+					'category' => 0,
+					'orderby' => 'post_date',
+					'post_type' => 'post',
+					'suppress_filters' => true,
+				], OBJECT);
+				foreach ($result as $post) {
+					setup_postdata($post);
+					?>
+					<article class="blog-post blog-post--main">
+						<?php $category = get_the_category();
+						$cat_link = get_category_link($category[0]);
+						?>
+						<a href="<?php echo $cat_link; ?>" class="blog-post__category">
+							<?php echo $category[0]->cat_name; ?>
+						</a>
+						<h3 class="blog-post__title blog-title">
+							<a href="<?php the_permalink(); ?>" class="blog-post__link">
+								<?php the_title(); ?>
+							</a>
+						</h3>
+						<p class="blog-post__descr">
+							<?php echo get_the_excerpt(); ?>
+						</p>
+						<time class="blog-post__date">
+							<?php the_date("j M Y"); ?>
+						</time>
+					</article>
+					<?php
+				}
+				wp_reset_postdata();
+				?>
+				<ul class="post-grid list-reset">
 					<?php if (have_posts()) {
 						while (have_posts()) {
 							the_post(); ?>
@@ -42,22 +62,22 @@
 										</a>
 									</h3>
 									<p class="blog-post__descr">
-										Размышляя об управлении ИТ-активами, я вспомнил один учебный пример. Менеджер по ИТ-мощностям
-										в крупной
-										компании
-										периодически готовил толстенный отчёт руководству. В очередной раз он не принёс отчёт, решив
-										проверить, нужен
-										ли
-										он вообще.
+										<?php echo get_the_excerpt(); ?>
 									</p>
-									<time class="blog-post__date">13 дек 2020</time>
+									<time class="blog-post__date">
+										<?php the_date("j M Y"); ?>
+									</time>
 								</article>
 							</li>
 
 						<?php }
 					} else { ?>
+						<p>Записей нет.</p>
 					<?php } ?>
+
 				</ul>
+				<?php if ( function_exists( 'wp_corenavi' ) ) wp_corenavi(); ?>
+				<?php the_posts_pagination(); ?>
 				<ul class="pagination list-reset">
 					<li class="pagination__item">
 						<a class="pagination__link pagination__link--current">1</a>
